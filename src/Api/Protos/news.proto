@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option csharp_namespace = "MenuNews.Api.Grpc";
+
+package news;
+
+// gRPC service cho News 
+service NewsGrpc {
+  rpc GetNewsById (GetNewsByIdRequest) returns (NewsGrpcResponse);
+  rpc GetAllNews (GetAllNewsRequest) returns (GetAllNewsResponse);
+}
+
+message GetNewsByIdRequest {
+  int32 id = 1;
+}
+
+message GetAllNewsRequest {
+  int32 page_number = 1;
+  int32 page_size = 2;
+}
+
+message NewsGrpcResponse {
+  int32 id = 1;
+  string title = 2;
+  string content = 3;
+  string author = 4;
+  string created_date = 5;
+}
+
+message GetAllNewsResponse {
+  repeated NewsGrpcResponse items = 1;
+  int32 total_count = 2;
+}
