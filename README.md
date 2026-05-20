@@ -28,7 +28,7 @@ Quản lý Menu và Tin tức (News) được xây dựng trên nền tảng **A
 
 ### Mục tiêu project
 
-MenuNewsManagement được xây dựng nhằm mục đích quản lý danh mục Menu và các bài viết Tin tức trong một hệ thống nội dung số. Một Menu có thể chứa nhiều News, và một News có thể thuộc nhiều Menu (quan hệ nhiều-nhiều). Dự án đồng thời đóng vai trò là một **reference project** giúp người học hiểu và thực hành Clean Architecture, CQRS, message broker, audit log và gRPC.
+MenuNewsManagement được xây dựng nhằm mục đích quản lý danh mục Menu và các bài viết Tin tức trong một hệ thống nội dung số. Một Menu có thể chứa nhiều News, và một News có thể thuộc nhiều Menu (quan hệ nhiều-nhiều). Dự án học hiểu và thực hành Clean Architecture, CQRS, message broker, audit log và gRPC.
 
 ### Chức năng chính
 
@@ -45,9 +45,9 @@ MenuNewsManagement được xây dựng nhằm mục đích quản lý danh mụ
 
 ### Kiến trúc sử dụng
 
-Dự án tuân theo **Clean Architecture** (còn gọi là Onion Architecture hoặc Ports & Adapters), với nguyên tắc cốt lõi là các layer bên trong không phụ thuộc vào các layer bên ngoài. Business logic hoàn toàn tách biệt khỏi database, framework và các dịch vụ bên ngoài.
+Dự án tuân theo **Clean Architecture** , với nguyên tắc cốt lõi là các layer bên trong không phụ thuộc vào các layer bên ngoài. Business logic hoàn toàn tách biệt khỏi database, framework và các dịch vụ bên ngoài.
 
-Bên cạnh đó, dự án áp dụng pattern **CQRS (Command Query Responsibility Segregation)**: tách riêng các thao tác ghi dữ liệu (Command) và đọc dữ liệu (Query) để dễ bảo trì, mở rộng và kiểm thử độc lập.
+Bên cạnh đó, dự án áp dụng pattern **CQRS **: tách riêng các thao tác ghi dữ liệu (Command) và đọc dữ liệu (Query) để dễ bảo trì, mở rộng và kiểm thử độc lập.
 
 ### Công nghệ sử dụng
 
