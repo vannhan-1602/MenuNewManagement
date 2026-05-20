@@ -1,6 +1,6 @@
 # MenuNewsManagement
 
- Quản lý Menu và Tin tức (News) được xây dựng trên nền tảng **ASP.NET Core 8 Web API** theo kiến trúc **Clean Architecture**. Dự án được thiết kế như một ứng dụng enterprise thực tế, tích hợp đầy đủ các công nghệ hiện đại bao gồm CQRS với MediatR, EF Core DB First, MongoDB audit log, RabbitMQ message broker và gRPC.
+Quản lý Menu và Tin tức (News) được xây dựng trên nền tảng **ASP.NET Core 8 Web API** theo kiến trúc **Clean Architecture**. Dự án được thiết kế tích hợp đầy đủ các công nghệ bao gồm CQRS với MediatR, EF Core DB First, MongoDB audit log, RabbitMQ message broker và gRPC.
 
 ---
 
@@ -21,7 +21,6 @@
 13. [Hướng dẫn MongoDB](#13-hướng-dẫn-mongodb)
 14. [Hướng dẫn gRPC](#14-hướng-dẫn-grpc)
 15. [Flow hệ thống](#15-flow-hệ-thống)
-16. [Roadmap / Future Improvements](#16-roadmap--future-improvements)
 
 ---
 
@@ -29,7 +28,7 @@
 
 ### Mục tiêu project
 
-MenuNewsManagement được xây dựng nhằm mục đích quản lý danh mục Menu và các bài viết Tin tức trong một hệ thống nội dung số. Một Menu có thể chứa nhiều News, và một News có thể thuộc nhiều Menu (quan hệ nhiều-nhiều). Dự án đồng thời đóng vai trò là một **reference project** giúp người học hiểu và thực hành Clean Architecture, CQRS, message broker, audit log và gRPC trong một ngữ cảnh thực tế.
+MenuNewsManagement được xây dựng nhằm mục đích quản lý danh mục Menu và các bài viết Tin tức trong một hệ thống nội dung số. Một Menu có thể chứa nhiều News, và một News có thể thuộc nhiều Menu (quan hệ nhiều-nhiều). Dự án đồng thời đóng vai trò là một **reference project** giúp người học hiểu và thực hành Clean Architecture, CQRS, message broker, audit log và gRPC.
 
 ### Chức năng chính
 
@@ -1165,44 +1164,3 @@ MongoDB: database "MenuNewsAudit", collection "audit_logs"
 Log hoàn tất (bất đồng bộ, không block request chính)
 ```
 
----
-
-## 16. Roadmap / Future Improvements
-
-Dưới đây là danh sách các tính năng và cải tiến kỹ thuật có thể thêm vào dự án trong tương lai, theo thứ tự ưu tiên từ cao đến thấp.
-
-### JWT Authentication & Authorization
-
-Hiện tại API chưa có xác thực. Bước tiếp theo là tích hợp JWT Bearer Token: thêm endpoint `POST /api/auth/login`, generate JWT, bảo vệ các endpoint với `[Authorize]`. `CurrentUserService` đã được chuẩn bị sẵn để đọc user từ `HttpContext.User.Identity.Name`.
-
-### Redis Distributed Cache
-
-Thêm Redis để cache kết quả của các Query thường xuyên được truy vấn như `GetAllMenus` và `GetAllNews`. Implement `ICacheService` tại Infrastructure layer, inject vào Query Handler và đặt TTL phù hợp. Khi dữ liệu thay đổi (Command thành công), invalidate cache liên quan.
-
-### Docker hóa toàn bộ ứng dụng
-
-Thêm `Dockerfile` cho project `MenuNews.Api` và bổ sung service `api` vào `docker-compose.yml`. Khi đó toàn bộ hệ thống gồm API + SQL Server + MongoDB + RabbitMQ có thể chạy hoàn toàn qua Docker Compose, không cần cài .NET SDK trên máy host.
-
-### Unit Test và Integration Test đầy đủ
-
-Bổ sung test cho tất cả Handler (dùng `Moq` để mock repository và service), test cho Controller (dùng `WebApplicationFactory`), test tích hợp cho toàn bộ luồng từ HTTP request đến database. Mục tiêu đạt coverage trên 80%.
-
-### CI/CD Pipeline
-
-Cấu hình GitHub Actions để tự động build, chạy test và deploy khi có code mới được push lên branch `main`. Pipeline bao gồm: restore, build, test, publish, và deploy lên môi trường staging.
-
-### Serilog và Structured Logging
-
-Thay thế logging mặc định của .NET bằng Serilog với sink ghi ra file (rolling) và console. Cấu hình structured logging để dễ query log sau này. Tích hợp Serilog Enrichers để tự động thêm `CorrelationId`, `MachineName`, `Environment` vào mỗi log entry.
-
-### Health Checks
-
-Thêm endpoint `GET /health` và `GET /health/ready` sử dụng `Microsoft.Extensions.Diagnostics.HealthChecks`. Check trạng thái kết nối SQL Server, MongoDB và RabbitMQ. Tích hợp với Docker Compose `healthcheck` để tự động restart khi service không healthy.
-
-### Pagination chuẩn hóa và Filtering
-
-Mở rộng `PaginatedList<T>` với metadata đầy đủ hơn (totalPages, hasPreviousPage, hasNextPage). Thêm tính năng lọc và sắp xếp vào các Query: lọc News theo Author, theo khoảng thời gian; lọc Menu theo tên.
-
-### Outbox Pattern cho RabbitMQ
-
-Hiện tại message RabbitMQ được publish trực tiếp trong Handler — nếu RabbitMQ tạm thời down, message sẽ bị mất. Implement Transactional Outbox Pattern: lưu message vào bảng `OutboxMessages` trong SQL Server cùng transaction với dữ liệu, sau đó một background service đọc Outbox và publish lên RabbitMQ. Đảm bảo at-least-once delivery.
